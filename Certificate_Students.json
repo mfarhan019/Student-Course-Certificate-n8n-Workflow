@@ -1,0 +1,289 @@
+{
+  "name": "Certificate_Students",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Name:"
+            },
+            {
+              "name": "Email:"
+            },
+            {
+              "name": "Score"
+            },
+            {
+              "name": "Verdict"
+            }
+          ]
+        },
+        "returnOutput": "allRuns"
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "Executed by \"Test Check\" Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -368,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "baaae305-a2f0-4b71-9560-348650c0c86e",
+              "name": "Name",
+              "value": "={{ $json['Name:'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f59a4d17-34f5-466a-a207-1585c5d11dbf",
+              "name": "Email",
+              "value": "={{ $json['Email:'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a429526c-0f55-40c8-aba4-158677d3afd8",
+              "name": "Score",
+              "value": "={{ $json.Score }}",
+              "type": "string"
+            },
+            {
+              "id": "a881ad1c-f426-4f30-a452-c1ee2a359a68",
+              "name": "Verdict",
+              "value": "={{ $json.Verdict }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -160,
+        176
+      ],
+      "id": "a1ae45b6-c05c-41e0-b596-c29250994cd4",
+      "name": "Set Required Fields"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1L_LQmhlCNlpCs4SlmaiWYCRx9QBIv4KxorCFksiyPTU",
+          "mode": "list",
+          "cachedResultName": "Certificate_Template",
+          "cachedResultUrl": "https://docs.google.com/document/d/1L_LQmhlCNlpCs4SlmaiWYCRx9QBIv4KxorCFksiyPTU/edit?usp=drivesdk"
+        },
+        "name": "={{ $json.Name }}_Certificate",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1CqBfNqtFpn4cpSJMCu6ddBjgH8uZwmt2",
+          "mode": "list",
+          "cachedResultName": "Students Certificate Storage",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1CqBfNqtFpn4cpSJMCu6ddBjgH8uZwmt2"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        64,
+        256
+      ],
+      "id": "5250cb22-d0ea-4298-bb63-a83e177be20d",
+      "name": "Copy Certificate Template",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "558nLf3o9oQdZBst",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "simple": false,
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{name}",
+              "replaceText": "={{ $('Set Required Fields').item.json.Name }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{date}",
+              "replaceText": "={{ $today.format(\"DD\") }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{year}",
+              "replaceText": "={{ $today.format(\"yyyy\") }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        240,
+        128
+      ],
+      "id": "42558df0-a416-4283-bf52-d7efd1779fc6",
+      "name": "Update Template",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "7SezY92ygSeRMbVF",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        416,
+        288
+      ],
+      "id": "ea92478c-8009-4667-b0bd-d7366ba862dc",
+      "name": "Download Certificate",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "558nLf3o9oQdZBst",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Set Required Fields').item.json.Email }}",
+        "subject": "=🎉 Congratulations {{ $('Set Required Fields').item.json.Name }}! Your Python Mastery Course Certificate",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Python Mastery Course - Certificate</title>\n</head>\n<body style=\"margin:0;padding:0;background-color:#0a0e17;font-family:Segoe UI,Arial,Helvetica,sans-serif;\">\n<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0a0e17;padding:24px 12px;\">\n  <tr>\n    <td align=\"center\">\n      <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:560px;background-color:#111827;border:1px solid #1f2937;border-radius:14px;overflow:hidden;\">\n\n        <!-- Header -->\n        <tr>\n          <td align=\"center\" style=\"padding:28px 24px;background-color:#16303a;background-image:linear-gradient(135deg,#10252b,#2a4f5c);border-bottom:1px solid #1f2937;\">\n            <div style=\"font-size:12px;letter-spacing:2px;color:#4ade80;font-weight:700;\">FIZZ ACADEMY</div>\n            <div style=\"font-size:24px;color:#ffffff;font-weight:800;margin-top:10px;\">🐍 Python Mastery Course</div>\n          </td>\n        </tr>\n\n        <!-- Body -->\n        <tr>\n          <td style=\"padding:24px;\">\n\n            <!-- Banner -->\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#12271f;border:1px solid #1f7a4a;border-radius:10px;\">\n              <tr>\n                <td align=\"center\" style=\"padding:20px;font-size:19px;font-weight:800;color:#4ade80;\">\n                  🎉 Congratulations, You Passed!\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"color:#e5e7eb;font-size:14px;font-weight:600;margin:28px 0 12px;\">\n              Hi <span style=\"color:#60a5fa;\">{{ $('Set Required Fields').item.json.Name }}</span>,\n            </p>\n\n            <p style=\"color:#9ca3af;font-size:13px;line-height:1.7;margin:0 0 20px;\">\n              Well done! You have successfully passed the <strong style=\"color:#ffffff;\">Python Mastery Course</strong>\n              certification test. Your hard work and consistency have paid off, and we are proud of your achievement.\n              Your <strong style=\"color:#ffffff;\">certificate is attached to this email.</strong>\n            </p>\n\n            <!-- Result details -->\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0b1019;border:1px solid #1f2937;border-radius:10px;\">\n              <tr>\n                <td style=\"padding:18px 20px;font-size:13px;line-height:2.1;color:#9ca3af;\">\n                  <div>📘 <strong style=\"color:#60a5fa;\">Course:</strong> Python Mastery Course</div>\n                  <div>📝 <strong style=\"color:#60a5fa;\">Total Questions:</strong> 10 MCQs</div>\n                  <div>🎯 <strong style=\"color:#60a5fa;\">Your Score:</strong> <span style=\"color:#4ade80;font-weight:700;\">{{ $('Set Required Fields').item.json.Score }}</span></div>\n                  <div>📆 <strong style=\"color:#60a5fa;\">Issue Date:</strong> {{ $now.setZone('Asia/Karachi').toFormat('d MMMM, yyyy') }}</div>\n                  <div>🏆 <strong style=\"color:#60a5fa;\">Verdict:</strong> <span style=\"color:#4ade80;font-weight:700 $('Set Required Fields').item.json.Verdict }}</span></div>\n                </td>\n              </tr>\n            </table>\n\n            <!-- Attachment note -->\n            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0f1a2e;border:1px dashed #3b82f6;border-radius:10px;margin-top:20px;\">\n              <tr>\n                <td align=\"center\" style=\"padding:16px;font-size:13px;color:#93c5fd;\">\n                  📎 Your certificate is attached to this email as a PDF.\n                </td>\n              </tr>\n            </table>\n\n            <p style=\"color:#9ca3af;font-size:13px;line-height:1.7;margin:22px 0 0;\">\n              You can download it, print it, and share it on LinkedIn or add it to your CV. Keep learning and keep building.\n            </p>\n\n          </td>\n        </tr>\n\n        <!-- Footer -->\n        <tr>\n          <td align=\"center\" style=\"padding:8px 24px 28px;\">\n            <div style=\"color:#6b7280;font-size:12px;\">Congratulations again, {{ $json.Student_Name }} - we are proud of you. 🏅</div>\n            <div style=\"color:#4b5563;font-size:11px;margin-top:6px;\">© 2026 Fizz Academy. All rights reserved.</div>\n          </td>\n        </tr>\n\n      </table>\n    </td>\n  </tr>\n</table>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          },
+          "senderName": "Fizz Academy"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        144
+      ],
+      "id": "b0550e3b-94bc-4e1d-8e35-2feb242a3765",
+      "name": "Send Certificate to Passing Students",
+      "webhookId": "36740328-f40c-4f3f-9ac8-52dde99cfc80",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "77AcgaITYTIzp1EY",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Executed by \"Test Check\" Workflow": {
+      "main": [
+        [
+          {
+            "node": "Set Required Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Required Fields": {
+      "main": [
+        [
+          {
+            "node": "Copy Certificate Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Certificate Template": {
+      "main": [
+        [
+          {
+            "node": "Update Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Template": {
+      "main": [
+        [
+          {
+            "node": "Download Certificate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Certificate": {
+      "main": [
+        [
+          {
+            "node": "Send Certificate to Passing Students",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9fd8d9e3-e995-465c-a33b-5aee347b5478",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f602d376f7002f5907a5734797af6dfd34fb3301db59c816d5b7283e3d818689"
+  },
+  "nodeGroups": [],
+  "id": "ZCEsUuGkCRgpSrmO",
+  "tags": []
+}

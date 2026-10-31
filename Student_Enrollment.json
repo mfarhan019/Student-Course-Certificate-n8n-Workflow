@@ -1,0 +1,379 @@
+{
+  "name": "Student Enrollment",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Student Enrollment Form",
+        "formDescription": "Enrollment to Python Mastery Course offered by Fizz Academy",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone No.",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -240,
+        304
+      ],
+      "id": "d5b1b9d5-2080-48af-bba1-832b093a4c3f",
+      "name": "On form submission",
+      "webhookId": "be05abf4-e1c1-4be6-9e87-01597715828b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8cd4794c-3ade-4f63-a003-1b3d683e841c",
+              "name": "name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "88d32843-ac15-41f1-9531-1b9769976ccb",
+              "name": "phone_no",
+              "value": "={{ $json[\"Phone No.\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "a7d7bfe5-456b-4ac1-9ac7-694c41b25944",
+              "name": "email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -16,
+        304
+      ],
+      "id": "40fbbd96-d742-4cdc-9208-7d090edf44ad",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1dpgE0N1x8gIbYOGpUu39U8of_TrgEnRkYbkqikIBGN8",
+          "mode": "list",
+          "cachedResultName": "Student Enrollment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dpgE0N1x8gIbYOGpUu39U8of_TrgEnRkYbkqikIBGN8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dpgE0N1x8gIbYOGpUu39U8of_TrgEnRkYbkqikIBGN8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Date": "={{ $now.format('dd LLLL,y') }}",
+            "Phone": "={{ $json.phone_no }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        16
+      ],
+      "id": "d3f39c78-6e04-4def-84d8-fbefd130a75a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "pvRw4sSEs3J6uDFl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=🎉 Welcome {{ $json.name }}! Your Course Enrollment is Confirmed",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Welcome to the Course!</title>\n</head>\n<body style=\"margin:0; padding:0; background-color:#0a0e17; font-family: Arial, Helvetica, sans-serif;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0a0e17; padding:30px 0;\">\n    <tr>\n      <td align=\"center\">\n        <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#111827; border-radius:14px; overflow:hidden; border:1px solid #1f2a3d; box-shadow:0 0 35px rgba(0,200,255,0.15);\">\n\n          <!-- Header -->\n          <tr>\n            <td style=\"background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding:35px 30px; text-align:center; border-bottom:1px solid #1f2a3d;\">\n              <p style=\"margin:0 0 8px; font-size:13px; letter-spacing:2px; color:#4ade80; text-transform:uppercase; font-weight:bold;\">Fizz Academy</p>\n              <h1 style=\"margin:0; font-size:25px; color:#ffffff; font-weight:800; text-shadow:0 0 15px rgba(59,130,246,0.6);\">🎉 Welcome, {{ $json.name }}!</h1>\n              <p style=\"margin:10px 0 0; font-size:14px; color:#9ca3af;\">Your enrollment is confirmed</p>\n            </td>\n          </tr>\n\n          <!-- Glowing Success Banner -->\n          <tr>\n            <td style=\"padding:30px 30px 0;\">\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(74,222,128,0.15)); border:1px solid rgba(74,222,128,0.4); border-radius:12px; box-shadow:0 0 20px rgba(74,222,128,0.15);\">\n                <tr>\n                  <td style=\"padding:22px 25px; text-align:center;\">\n                    <p style=\"margin:0; font-size:18px; color:#4ade80; font-weight:800; text-shadow:0 0 10px rgba(74,222,128,0.5);\">✅ Seat Reserved Successfully!</p>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Body -->\n          <tr>\n            <td style=\"padding:30px 30px 10px;\">\n              <p style=\"font-size:16px; color:#e5e7eb; line-height:1.7; margin:0 0 15px;\">\n                Hi <strong style=\"color:#60a5fa;\">{{ $json.name }}</strong>,\n              </p>\n              <p style=\"font-size:15px; color:#9ca3af; line-height:1.7; margin:0 0 20px;\">\n                Thank you for enrolling! We're thrilled to have you join us. Your payment has been successfully received and your seat is officially reserved.\n              </p>\n\n              <!-- Test Unlock Date Highlight -->\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(74,222,128,0.1)); border:1px solid rgba(96,165,250,0.4); border-radius:12px; margin-bottom:25px; box-shadow:0 0 15px rgba(59,130,246,0.15);\">\n                <tr>\n                  <td style=\"padding:18px 25px; text-align:center;\">\n                    <p style=\"margin:0 0 6px; font-size:14px; color:#9ca3af;\">📌 Your certification test unlocks <strong style=\"color:#ffffff;\">30 days</strong> after enrollment</p>\n                    <p style=\"margin:0; font-size:17px; color:#4ade80; font-weight:800; text-shadow:0 0 10px rgba(74,222,128,0.4);\">🗓️ Test Unlock Date: {{ $now.plus({ days: 30 }).format('dd LLLL yyyy') }}</p>\n                  </td>\n                </tr>\n              </table>\n\n              <!-- Enrollment Details Card -->\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0d1420; border-radius:10px; border:1px solid #1f2a3d; margin-bottom:25px;\">\n                <tr>\n                  <td style=\"padding:20px 25px;\">\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">👤 Name:</strong> {{ $json.name }}</p>\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📧 Email:</strong> {{ $json.email }}</p>\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📱 Phone:</strong> {{ $json.phone_no }}</p>\n                    <p style=\"margin:0; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📅 Enrollment Date:</strong> {{ $now.format('dd LLLL,y') }}</p>\n                  </td>\n                </tr>\n              </table>\n\n              <p style=\"font-size:15px; color:#9ca3af; line-height:1.7; margin:0 0 25px;\">\n                Next step: join our exclusive course community on WhatsApp to get updates, resources, and connect with fellow students 👇\n              </p>\n\n              <!-- Button -->\n              <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:0 auto 25px;\">\n                <tr>\n                  <td align=\"center\" style=\"border-radius:8px; background: linear-gradient(135deg, #3b82f6, #22c55e); box-shadow:0 0 20px rgba(59,130,246,0.5);\">\n                    <a href=\"https://chat.whatsapp.com/JHG323456VGCHFtyfgnvc\" target=\"_blank\" style=\"display:inline-block; padding:16px 36px; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:8px;\">\n                      👉 Join Course Group\n                    </a>\n                  </td>\n                </tr>\n              </table>\n\n              <p style=\"font-size:13px; color:#6b7280; line-height:1.6; margin:0; text-align:center;\">\n                Stay active in the group — reminders and updates will be sent as your test date approaches!\n              </p>\n            </td>\n          </tr>\n\n          <!-- Footer -->\n          <tr>\n            <td style=\"padding:25px 30px 35px; text-align:center;\">\n              <p style=\"margin:0 0 6px; font-size:13px; color:#6b7280;\">Need help? Just reply to this email — we're here for you.</p>\n              <p style=\"margin:0; font-size:12px; color:#4b5563;\">© 2026 Fizz Academy. All rights reserved.</p>\n            </td>\n          </tr>\n\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Fizz Academy"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        208
+      ],
+      "id": "b7fdf297-2db9-4002-b24c-aa12e4289cc0",
+      "name": "Confirmation Email",
+      "webhookId": "975403db-29c6-49ed-88c9-0060261c7bb0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "77AcgaITYTIzp1EY",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=⏰ Your Test Unlocks in 5 Days, {{$json.name}}!",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Your Test is in 5 Days!</title>\n</head>\n<body style=\"margin:0; padding:0; background-color:#0a0e17; font-family: Arial, Helvetica, sans-serif;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0a0e17; padding:30px 0;\">\n    <tr>\n      <td align=\"center\">\n        <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#111827; border-radius:14px; overflow:hidden; border:1px solid #1f2a3d; box-shadow:0 0 35px rgba(0,200,255,0.15);\">\n\n          <!-- Header -->\n          <tr>\n            <td style=\"background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding:35px 30px; text-align:center; border-bottom:1px solid #1f2a3d;\">\n              <p style=\"margin:0 0 8px; font-size:13px; letter-spacing:2px; color:#4ade80; text-transform:uppercase; font-weight:bold;\">Fizz Academy</p>\n              <h1 style=\"margin:0; font-size:24px; color:#ffffff; font-weight:800; text-shadow:0 0 15px rgba(59,130,246,0.6);\">🐍 Python Mastery Course</h1>\n            </td>\n          </tr>\n\n          <!-- Glowing Alert Banner -->\n          <tr>\n            <td style=\"padding:30px 30px 0;\">\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(74,222,128,0.15)); border:1px solid rgba(74,222,128,0.4); border-radius:12px; box-shadow:0 0 20px rgba(74,222,128,0.15);\">\n                <tr>\n                  <td style=\"padding:22px 25px; text-align:center;\">\n                    <p style=\"margin:0; font-size:20px; color:#4ade80; font-weight:800; text-shadow:0 0 10px rgba(74,222,128,0.5);\">⏳ 5 Days Left Until Your Test!</p>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Body -->\n          <tr>\n            <td style=\"padding:30px 30px 10px;\">\n              <p style=\"font-size:16px; color:#e5e7eb; line-height:1.7; margin:0 0 15px;\">\n                Hi <strong style=\"color:#60a5fa;\">{{$json.name}}</strong>,\n              </p>\n              <p style=\"font-size:15px; color:#9ca3af; line-height:1.7; margin:0 0 20px;\">\n                Your <strong style=\"color:#ffffff;\">Python Mastery Course</strong> certification test unlocks in just <strong style=\"color:#4ade80;\">5 days</strong>. This is your final stretch — time to revise, practice, and lock in what you've learned.\n              </p>\n\n              <!-- Test Info Card -->\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0d1420; border-radius:10px; border:1px solid #1f2a3d; margin-bottom:25px;\">\n                <tr>\n                  <td style=\"padding:20px 25px;\">\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📘 Course:</strong> Python Mastery Course</p>\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">🗓️ Test Unlocks In:</strong> 5 Days</p>\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📆 Test Date:</strong> <span style=\"color:#ffffff; font-weight:bold;\">{{ DateTime.now().plus({ days: 5 }).toFormat('dd LLLL yyyy') }}</span></p>\n                    <p style=\"margin:0; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">🎯 Status:</strong> <span style=\"color:#4ade80; font-weight:bold;\">On Track</span></p>\n                  </td>\n                </tr>\n              </table>\n\n              <p style=\"font-size:15px; color:#9ca3af; line-height:1.7; margin:0 0 25px;\">\n                Make the most of these last few days — revisit tricky topics, run through your notes, and practice a few coding exercises to sharpen up before test day.\n              </p>\n\n              <!-- Button -->\n              <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:0 auto 10px;\">\n                <tr>\n                  <td align=\"center\" style=\"border-radius:8px; background: linear-gradient(135deg, #3b82f6, #22c55e); box-shadow:0 0 20px rgba(59,130,246,0.5);\">\n                    <a href=\"https://chat.whatsapp.com/JHG323456VGCHFtyfgnvc\" target=\"_blank\" style=\"display:inline-block; padding:16px 40px; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:8px;\">\n                      🚀 Go to Course Group\n                    </a>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Footer -->\n          <tr>\n            <td style=\"padding:25px 30px 35px; text-align:center;\">\n              <p style=\"margin:0 0 6px; font-size:13px; color:#6b7280;\">Stay focused, {{$json.name}} — you've got this. 💪</p>\n              <p style=\"margin:0; font-size:12px; color:#4b5563;\">© 2026 Fizz Academy. All rights reserved.</p>\n            </td>\n          </tr>\n\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Fizz Academy"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        400
+      ],
+      "id": "0c986070-6e6c-46cd-98be-d4b86f473029",
+      "name": "Reminder Mail",
+      "webhookId": "975403db-29c6-49ed-88c9-0060261c7bb0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "77AcgaITYTIzp1EY",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 25,
+        "unit": "days"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        400
+      ],
+      "id": "b940003f-97c5-46b0-82ee-0b48e381ec10",
+      "name": "Send Reminder Email After 25 Days",
+      "webhookId": "da7b49f4-d68d-44a8-8178-07375f80fbaf"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=✅ {{ $json.name }}, Your Python Mastery Test is Now Live!",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Your Test is Live!</title>\n</head>\n<body style=\"margin:0; padding:0; background-color:#0a0e17; font-family: Arial, Helvetica, sans-serif;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0a0e17; padding:30px 0;\">\n    <tr>\n      <td align=\"center\">\n        <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#111827; border-radius:14px; overflow:hidden; border:1px solid #1f2a3d; box-shadow:0 0 35px rgba(0,200,255,0.15);\">\n\n          <!-- Header -->\n          <tr>\n            <td style=\"background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding:35px 30px; text-align:center; border-bottom:1px solid #1f2a3d;\">\n              <p style=\"margin:0 0 8px; font-size:13px; letter-spacing:2px; color:#4ade80; text-transform:uppercase; font-weight:bold;\">Fizz Academy</p>\n              <h1 style=\"margin:0; font-size:24px; color:#ffffff; font-weight:800; text-shadow:0 0 15px rgba(59,130,246,0.6);\">🐍 Python Mastery Course</h1>\n            </td>\n          </tr>\n\n          <!-- Glowing Alert Banner -->\n          <tr>\n            <td style=\"padding:30px 30px 0;\">\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(74,222,128,0.15)); border:1px solid rgba(74,222,128,0.4); border-radius:12px; box-shadow:0 0 20px rgba(74,222,128,0.15);\">\n                <tr>\n                  <td style=\"padding:22px 25px; text-align:center;\">\n                    <p style=\"margin:0; font-size:20px; color:#4ade80; font-weight:800; text-shadow:0 0 10px rgba(74,222,128,0.5);\">✅ Your Test is Now Live!</p>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Body -->\n          <tr>\n            <td style=\"padding:30px 30px 10px;\">\n              <p style=\"font-size:16px; color:#e5e7eb; line-height:1.7; margin:0 0 15px;\">\n                Hi <strong style=\"color:#60a5fa;\">{{ $json.name }}</strong>,\n              </p>\n              <p style=\"font-size:15px; color:#9ca3af; line-height:1.7; margin:0 0 20px;\">\n                Congratulations on reaching this milestone! Your <strong style=\"color:#ffffff;\">Python Mastery Course</strong> certification test is now unlocked and ready for you to attempt.\n              </p>\n\n              <!-- Test Info Card -->\n              <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0d1420; border-radius:10px; border:1px solid #1f2a3d; margin-bottom:25px;\">\n                <tr>\n                  <td style=\"padding:20px 25px;\">\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📘 Course:</strong> Python Mastery Course</p>\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📝 Total Questions:</strong> 10 MCQs</p>\n                    <p style=\"margin:0 0 12px; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">📆 Test Date:</strong> {{ $now.format('dd LLLL yyyy') }}</p>\n                    <p style=\"margin:0; font-size:14px; color:#9ca3af;\"><strong style=\"color:#60a5fa;\">🎯 Status:</strong> <span style=\"color:#4ade80; font-weight:bold;\">Ready to Attempt</span></p>\n                  </td>\n                </tr>\n              </table>\n\n              <p style=\"font-size:15px; color:#9ca3af; line-height:1.7; margin:0 0 25px;\">\n                Please attempt the test carefully and submit your responses on time. Once submitted, your results will be shared with you shortly after evaluation.\n              </p>\n\n              <!-- Button -->\n              <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:0 auto 10px;\">\n                <tr>\n                  <td align=\"center\" style=\"border-radius:8px; background: linear-gradient(135deg, #3b82f6, #22c55e); box-shadow:0 0 20px rgba(59,130,246,0.5);\">\n                    <a href=\"https://docs.google.com/forms/d/e/1FAIpQLScpm11pwEFd4mZN8IkPGKle57ZtlRHw5sGREOyFWXTxnOpjnQ/viewform\" target=\"_blank\" style=\"display:inline-block; padding:16px 40px; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:8px;\">\n                      📝 Start Your Test\n                    </a>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Footer -->\n          <tr>\n            <td style=\"padding:25px 30px 35px; text-align:center;\">\n              <p style=\"margin:0 0 6px; font-size:13px; color:#6b7280;\">Good luck, {{ $json.name }} — you've got this. 💪</p>\n              <p style=\"margin:0; font-size:12px; color:#4b5563;\">© 2026 Fizz Academy. All rights reserved.</p>\n            </td>\n          </tr>\n\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Fizz Academy"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        592
+      ],
+      "id": "fe4a0ae9-cb5c-4fe3-93ed-823ba94bf9cc",
+      "name": "Send Test Link",
+      "webhookId": "975403db-29c6-49ed-88c9-0060261c7bb0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "77AcgaITYTIzp1EY",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=8995255794",
+        "text": "=New Student Enrolled:\n\nName: {{ $json.Name }}\nEmail: {{ $json.Email }}\nPhone No: {{ $json.Phone }}\nDate Submitted: {{ $json.Date }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        16
+      ],
+      "id": "001e5d7e-60d9-49a0-bccf-a45dff507808",
+      "name": "Send a text message",
+      "webhookId": "6dc323d2-def2-460d-9070-e40c59f292a4",
+      "credentials": {
+        "telegramApi": {
+          "id": "SgddFKos5OV7ReLr",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "unit": "days"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        592
+      ],
+      "id": "9728ad5c-ccab-43a3-9f98-046eca570bc7",
+      "name": "Sending Test Link After 30 Days",
+      "webhookId": "da7b49f4-d68d-44a8-8178-07375f80fbaf"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirmation Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Reminder Email After 25 Days",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sending Test Link After 30 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Reminder Email After 25 Days": {
+      "main": [
+        [
+          {
+            "node": "Reminder Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sending Test Link After 30 Days": {
+      "main": [
+        [
+          {
+            "node": "Send Test Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "086b24bc-0a1d-43ea-a8cc-c0cec956045f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f602d376f7002f5907a5734797af6dfd34fb3301db59c816d5b7283e3d818689"
+  },
+  "nodeGroups": [],
+  "id": "n01eqf5vSMCIwERv",
+  "tags": []
+}
