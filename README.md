@@ -289,4 +289,4 @@ MIT — free to use and modify.
 
 ## Author
 
-Built by **[Your Name]** — feel free to connect or contribute!
+Built by **Muhammad Farhan** — feel free to connect or contribute!
